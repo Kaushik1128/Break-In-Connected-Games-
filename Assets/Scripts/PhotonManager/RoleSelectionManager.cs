@@ -124,7 +124,7 @@ public class RoleSelectionManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient && AllRolesSelected())
         {
-            PhotonNetwork.LoadLevel("Bank Level");
+            PhotonNetwork.LoadLevel("Bank Level Main");
         }
         else
         {

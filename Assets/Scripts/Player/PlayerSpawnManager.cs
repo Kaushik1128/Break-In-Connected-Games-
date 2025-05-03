@@ -20,17 +20,19 @@ public class PlayerSpawnManager : MonoBehaviour
         switch (role)
         {
             case "MainRobber":
-                PhotonNetwork.Instantiate("MainRobberPrefab", mainRobberSpawn.position, Quaternion.identity);
+                PhotonNetwork.Instantiate("Main Robber", mainRobberSpawn.position, Quaternion.identity);
                 break;
             case "LockPicker":
-                PhotonNetwork.Instantiate("LockPickerPrefab", lockPickerSpawn.position, Quaternion.identity);
+                PhotonNetwork.Instantiate("Lock Picker", lockPickerSpawn.position, Quaternion.identity);
                 break;
             case "Insider":
-                PhotonNetwork.Instantiate("InsiderPrefab", insiderSpawn.position, Quaternion.identity);
+                PhotonNetwork.Instantiate("Insider", insiderSpawn.position, Quaternion.identity);
                 break;
             case "Hacker":
-                PhotonNetwork.Instantiate("HackerPrefab", hackerSpawn.position, Quaternion.identity);
+                PhotonNetwork.Instantiate("Hacker", hackerSpawn.position, Quaternion.identity);
                 break;
         }
+
+        Debug.Log("Spawning role: " + role);
     }
 }
