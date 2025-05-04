@@ -2,7 +2,7 @@
 using ExitGames.Client.Photon;
 using UnityEngine;
 using Photon.Pun;
-//using Cinemachine;
+using Unity.Cinemachine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -99,6 +99,7 @@ namespace StarterAssets
         [SerializeField] private float CrouchHeight = 1.2f;
         [SerializeField] private Vector3 crouchCenter = new Vector3(0,0.595f,0);
         [SerializeField] private float crouchTransitionSpeed = 7f;
+        [SerializeField] private CinemachineCamera _cinemachineCamera;
         private float standHeight;
         private Vector3 standCenter;
         private bool crouched;
@@ -131,11 +132,11 @@ namespace StarterAssets
         {
             get
             {
-#if ENABLE_INPUT_SYSTEM
+                #if ENABLE_INPUT_SYSTEM
                 return _playerInput.currentControlScheme == "KeyboardMouse";
-#else
+                #else
 				return false;
-#endif
+                #endif
             }
         }
 
@@ -151,45 +152,62 @@ namespace StarterAssets
 
         private void Start()
         {
-            _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            
-            _hasAnimator = TryGetComponent(out _animator);
+
+            photonView = GetComponent<PhotonView>();
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
-            photonView = GetComponent<Photon.Pun.PhotonView>();
+            _hasAnimator = TryGetComponent(out _animator);
 
-#if ENABLE_INPUT_SYSTEM
+            #if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
-#else
-			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
-#endif
+            #endif
 
             AssignAnimationIDs();
 
-            // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
 
-            // Crouch Values
-            standCenter = _controller.center;
-            standHeight = _controller.height;
+            if (_controller != null)
+            {
+                standCenter = _controller.center;
+                standHeight = _controller.height;
+            }
+
+            if (CinemachineCameraTarget != null)
+                _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+
+            _cinemachineCamera = GetComponentInChildren<CinemachineCamera>();
+            if (_cinemachineCamera == null)
+                Debug.LogWarning("⚠ CinemachineCamera is missing on this prefab!");
+
+            if (_input == null)
+                Debug.LogWarning("⚠ StarterAssetsInputs is missing on this prefab!");
 
             if (!photonView.IsMine)
             {
-                if (GetComponentInChildren<Camera>() != null)
-                    GetComponentInChildren<Camera>().gameObject.SetActive(false);
+                this.enabled = false;  // disables ThirdPersonController for non-local players
+                return;
+            }
 
-                if (GetComponentInChildren<AudioListener>() != null)
-                    GetComponentInChildren<AudioListener>().enabled = false;
+            if (!photonView.IsMine)
+            {
+                Camera cam = GetComponentInChildren<Camera>();
+                if (cam != null) cam.gameObject.SetActive(false);
 
-                //if (GetComponentInChildren<CinemachineVirtualCamera>() != null)
-                    //GetComponentInChildren<CinemachineVirtualCamera>().enabled = false;
+                AudioListener audioListener = GetComponentInChildren<AudioListener>();
+                if (audioListener != null) audioListener.enabled = false;
+
+                if (_cinemachineCamera != null)
+                    _cinemachineCamera.enabled = false;
+
+                if (CinemachineCameraTarget != null)
+                    CinemachineCameraTarget.SetActive(false);
             }
         }
 
         private void Update()
         {
-            if(!photonView.IsMine) return;
+            if (!photonView.IsMine || _input == null) return;
 
             _hasAnimator = TryGetComponent(out _animator);
 
@@ -198,19 +216,19 @@ namespace StarterAssets
             Move();
             UpdateControllerCollider();
 
-            if(_input.crouch)
+            if (_input.crouch)
             {
                 crouched = !crouched;
-
                 _input.crouch = false;
             }
-            
+                    
         }
 
         private void LateUpdate()
-        {
-            if(!photonView.IsMine) return;
-            
+        {  
+            // CameraRotation();
+            if (!photonView.IsMine || CinemachineCameraTarget == null || _controller == null) return;
+
             CameraRotation();
         }
 
@@ -240,6 +258,10 @@ namespace StarterAssets
 
         private void CameraRotation()
         {
+            if (CinemachineCameraTarget == null) return;
+
+            if(_input == null || CinemachineCameraTarget == null) return;
+
             // if there is an input and camera position is not fixed
             if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
@@ -261,6 +283,7 @@ namespace StarterAssets
 
         private void Move()
         {
+            if (_controller == null || _input == null) return;  
             // set target speed based on move speed, sprint speed and if sprint is pressed
             float targetSpeed = _input.sprint ? SprintSpeed : crouched ? CrouchSpeed : MoveSpeed;
 
