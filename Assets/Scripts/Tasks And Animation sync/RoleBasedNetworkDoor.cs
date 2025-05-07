@@ -8,7 +8,6 @@ public class NetworkDoorAllRoles : MonoBehaviourPun
     public GameObject instructionUI;
     public Animator doorAnimator;
     public AudioSource doorSound;
-    public GameObject ThisTrigger;
     public string openAnimation = "DoorOpen";
     public string closeAnimation = "DoorClose";
 
@@ -79,9 +78,6 @@ public class NetworkDoorAllRoles : MonoBehaviourPun
 
         if (doorSound != null)
             doorSound.Play();
-
-        if (ThisTrigger != null)
-            ThisTrigger.SetActive(false);
 
         isOpen = !isOpen;
     }

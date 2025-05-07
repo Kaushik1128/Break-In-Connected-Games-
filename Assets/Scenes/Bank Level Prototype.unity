@@ -4884,6 +4884,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerFollowCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 5591266916784935913, guid: 204828b1dabd6ef4aa9d1c3cd13ece17, type: 3}
+      propertyPath: sceneViewId
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8146391731865021400, guid: 204828b1dabd6ef4aa9d1c3cd13ece17, type: 3}
       propertyPath: m_Name
       value: Insider

@@ -203,6 +203,15 @@ namespace StarterAssets
                 if (CinemachineCameraTarget != null)
                     CinemachineCameraTarget.SetActive(false);
             }
+
+            if (CompareTag("Hacker"))
+            {
+                GetComponent<ThirdPersonController>().enabled = false;
+                GetComponent<PlayerInput>().enabled = false;
+
+                // Optional: lock camera
+                Camera.main.gameObject.SetActive(false);
+            }
         }
 
         private void Update()

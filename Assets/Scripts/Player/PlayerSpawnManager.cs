@@ -29,7 +29,7 @@ public class PlayerSpawnManager : MonoBehaviour
                 PhotonNetwork.Instantiate("Insider Testing", insiderSpawn.position, Quaternion.identity);
                 break;
             case "Hacker":
-                PhotonNetwork.Instantiate("Hacker Testing", hackerSpawn.position, Quaternion.identity);
+                PhotonNetwork.Instantiate("Hacker UI POV", hackerSpawn.position, Quaternion.identity);
                 break;
         }
 

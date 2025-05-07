@@ -40,6 +40,34 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - ToggleDoor
+  - PlayerReady
+  - SelectRoles
+  - StartGame
+  - SyncRole
+  - StartDistraction
+  - ShowPasswordToAll
+  - NetworkOpenVault
+  - SyncPassword
+  - SetPassword
+  - ActivateCamouflage
+  - DeactivateCamouflage
+  - DistractGuard
+  - DisableKeycard
+  - SetGuardIndicators
+  - RPC_RevealTargets
+  - ActivatePenDrive
+  - CloseMiniGame
+  - EnableMiniGame
+  - InsertPendrive
+  - CaughtPlayer
+  - ThrowSmokeBomb
+  - ReloadSceneForAll
+  - ShowCaughtScreen
+  - DistractGuardVault
+  - PickUpGold
+  - DisableGoldObject
+  - EnableExitTarget
+  - ShowGameOver
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
